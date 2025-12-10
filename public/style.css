@@ -1,0 +1,5 @@
+body{font-family:Arial,Helvetica,sans-serif;margin:0;padding:0;background:#f5f7fb;color:#222}
+.container{max-width:800px;margin:40px auto;padding:20px;background:#fff;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+label{display:block;margin:8px 0}
+button{padding:8px 12px;border-radius:6px}
+article{border-top:1px solid #eee;padding:8px 0}

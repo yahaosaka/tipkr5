@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Дневник настроения</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="container">
+    <h1>Дневник настроения</h1>
+
+    <form id="entryForm">
+      <label>Дата: <input type="date" name="date" required></label>
+      <label>Настроение:
+        <select name="mood">
+          <option value="happy">Счастлив</option>
+          <option value="neutral">Нейтрально</option>
+          <option value="sad">Печален</option>
+          <option value="angry">Зол</option>
+        </select>
+      </label>
+      <label>Заметка:<br>
+        <textarea name="note"></textarea>
+      </label>
+      <button type="submit">Добавить запись</button>
+    </form>
+
+    <section id="entries"></section>
+  </main>
+
+<script>
+const form = document.getElementById('entryForm');
+const entriesEl = document.getElementById('entries');
+
+async function fetchEntries(){
+  const res = await fetch('/api/entries');
+  const data = await res.json();
+  render(data);
+}
+
+function render(list){
+  entriesEl.innerHTML = '';
+  if(list.length === 0) entriesEl.textContent = 'Записей нет';
+  list.forEach(e => {
+    const el = document.createElement('article');
+    el.innerHTML = `<h3>${e.mood} — ${e.date}</h3><p>${e.note||''}</p>`;
+    entriesEl.appendChild(el);
+  });
+}
+
+form.addEventListener('submit', async (ev) =>{
+  ev.preventDefault();
+  const fd = new FormData(form);
+  const body = {};
+  fd.forEach((v,k)=> body[k]=v);
+  const res = await fetch('/api/entries',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(res.ok){ form.reset(); fetchEntries(); }
+  else alert('Ошибка');
+});
+
+fetchEntries();
+</script>
+</body>
+</html>
