@@ -6,21 +6,15 @@ const logger = require('./middleware/logger');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middlewares
-app.use(express.json()); // обработка application/json
-app.use(express.urlencoded({ extended: true })); // обработка form-urlencoded
-app.use(logger); // собственный middleware
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true })); 
+app.use(logger);
 
-// Статические файлы
 app.use(express.static(path.join(__dirname, '..', 'public')));
-
-// API
 app.use('/api/entries', entriesRouter);
 
-// Простой root для проверки
 app.get('/health', (req, res) => res.json({ status: 'ok', now: new Date().toISOString() }));
 
-// Error handler (последний middleware)
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({ error: 'Internal server error' });

@@ -1,36 +1,31 @@
 const repo = require('../repository/entriesRepo');
 
-// GET /api/entries
 async function listEntries(req, res, next){
   try{
-    const { mood, from, to, limit, sort } = req.query; // req.query usage
+    const { mood, from, to, limit, sort } = req.query;
     const options = { mood, from, to, limit: limit ? Number(limit) : undefined, sort };
     const list = await repo.query(options);
     res.json(list);
   }catch(err){ next(err); }
 }
 
-// GET /api/entries/:id
 async function getEntryById(req, res, next){
   try{
-    const id = req.params.id; // req.params usage
+    const id = req.params.id; 
     const entry = await repo.getById(id);
     if(!entry) return res.status(404).json({ error: 'Not found' });
     res.json(entry);
   }catch(err){ next(err); }
 }
-
-// POST /api/entries
 async function createEntry(req, res, next){
   try{
-    const { mood, note, date } = req.body; // body parsing
+    const { mood, note, date } = req.body; 
     if(!mood || !date) return res.status(400).json({ error: 'mood and date are required' });
     const created = await repo.create({ mood, note, date });
     res.status(201).json(created);
   }catch(err){ next(err); }
 }
 
-// PUT /api/entries/:id
 async function updateEntry(req, res, next){
   try{
     const id = req.params.id;
@@ -41,7 +36,6 @@ async function updateEntry(req, res, next){
   }catch(err){ next(err); }
 }
 
-// DELETE /api/entries/:id
 async function deleteEntry(req, res, next){
   try{
     const id = req.params.id;
